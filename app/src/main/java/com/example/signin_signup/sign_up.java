@@ -39,6 +39,9 @@ public class sign_up extends AppCompatActivity {
     String userID;
     FirebaseFirestore firebasedb;
     private FirebaseAuth mAuth;
+    dbhelper db=new dbhelper(this);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +95,22 @@ public class sign_up extends AppCompatActivity {
         String selectedRadioButton_text= (String) selectedRadioButton.getText();
         String pass = pass_inputfield.getText().toString();
 
+
+
+
+
         if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             if (!pass.isEmpty()) {
+//Sqlite DB
+                Boolean insert =db.insertuser(name,email);
+                if(insert){
+                    Toast.makeText(this, "Inserted Into SQLite", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Error while inserting into SQLite", Toast.LENGTH_SHORT).show();
+                }
+
+
+                //Firebase Firestore
                 mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -112,9 +129,9 @@ public class sign_up extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void unused) {
                                 Toast.makeText(sign_up.this, "User Profile Created", Toast.LENGTH_SHORT).show();
-                                Intent tologin = new Intent(getApplicationContext(), sign_in.class);
-                                startActivity(tologin);
-                                finish();
+//                                Intent tologin = new Intent(getApplicationContext(), sign_in.class);
+//                                startActivity(tologin);
+//                                finish();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override

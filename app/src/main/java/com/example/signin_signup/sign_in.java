@@ -36,6 +36,7 @@ public class sign_in extends AppCompatActivity {
 
         login_btn=findViewById(R.id.login_btn);
 
+
         //Firebase instance
         mAuth = FirebaseAuth.getInstance();
 
