@@ -1,9 +1,5 @@
 package com.example.signin_signup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -14,6 +10,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,8 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class sign_up extends AppCompatActivity {
 
@@ -54,22 +51,21 @@ public class sign_up extends AppCompatActivity {
         email_inputfield = findViewById(R.id.email_inputfield);
         pass_inputfield = findViewById(R.id.pass_inputfield);
 
-        radioGroup=findViewById(R.id.gender_radio);
-
+        radioGroup = findViewById(R.id.gender_radio);
 
 
         //Button
         register_btn = findViewById(R.id.register_btn);
         //TextView
         signin_text = findViewById(R.id.signin_text);
-
-        signin_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(new Intent(getApplicationContext(), sign_in.class));
-            }
-        });
+//
+//        signin_text.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                startActivity(new Intent(getApplicationContext(), sign_in.class));
+//            }
+//        });
 
 //Firebase instance
         mAuth = FirebaseAuth.getInstance();
@@ -101,15 +97,6 @@ public class sign_up extends AppCompatActivity {
 
         if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             if (!pass.isEmpty()) {
-//Sqlite DB
-                Boolean insert =db.insertuser(name,email);
-                if(insert){
-                    Toast.makeText(this, "Inserted Into SQLite", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(this, "Error while inserting into SQLite", Toast.LENGTH_SHORT).show();
-                }
-
-
                 //Firebase Firestore
                 mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -129,9 +116,6 @@ public class sign_up extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void unused) {
                                 Toast.makeText(sign_up.this, "User Profile Created", Toast.LENGTH_SHORT).show();
-//                                Intent tologin = new Intent(getApplicationContext(), sign_in.class);
-//                                startActivity(tologin);
-//                                finish();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -148,6 +132,14 @@ public class sign_up extends AppCompatActivity {
                         Log.d("TAG", "onFailure: " + e);
                     }
                 });
+
+                //Sqlite DB
+                Boolean insert = db.insertuser(name, phn, email, selectedRadioButton_text, pass);
+                if (insert) {
+                    Toast.makeText(this, "Inserted Into SQLite", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Error while inserting into SQLite", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 pass_inputfield.setError("Empty Field Not Allowed");
             }

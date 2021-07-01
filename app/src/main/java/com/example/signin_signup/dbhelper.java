@@ -15,13 +15,12 @@ public class dbhelper extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_ID = "id";
     public static final String CONTACTS_COLUMN_NAME = "name";
     public static final String CONTACTS_COLUMN_EMAIL = "email";
-    public static final String CONTACTS_COLUMN_STREET = "street";
-    public static final String CONTACTS_COLUMN_CITY = "place";
+    public static final String CONTACTS_COLUMN_GENDER = "gender";
+    public static final String CONTACTS_COLUMN_PASS = "password";
     public static final String CONTACTS_COLUMN_PHONE = "phone";
 
-    public dbhelper(Context context)
-    {
-        super(context, DATABASE_NAME , null, 1);
+    public dbhelper(Context context) {
+        super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
@@ -29,7 +28,7 @@ public class dbhelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table "+ CONTACTS_TABLE_NAME+
-                        "(id integer primary key, name text,phone text,email text, street text,place text)"
+                        "(id integer primary key, name text,phone text,email text, gender text,password text)"
         );
     }
 
@@ -40,24 +39,27 @@ public class dbhelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertContact (String name, String phone, String email, String street,String place) {
+    public boolean insertContact(String name, String phone, String email, String gender, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
         contentValues.put("phone", phone);
         contentValues.put("email", email);
-        contentValues.put("street", street);
-        contentValues.put("place", place);
+        contentValues.put("street", gender);
+        contentValues.put("place", password);
         db.insert("contacts", null, contentValues);
         return true;
     }
 
-    public Boolean insertuser(String name, String email) {
+    public Boolean insertuser(String name, String phone, String email, String gender, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CONTACTS_COLUMN_NAME,name);
-        contentValues.put(CONTACTS_COLUMN_EMAIL,email);
-        db.insert(CONTACTS_TABLE_NAME,null,contentValues);
+        contentValues.put(CONTACTS_COLUMN_NAME, name);
+        contentValues.put(CONTACTS_COLUMN_PHONE, phone);
+        contentValues.put(CONTACTS_COLUMN_EMAIL, email);
+        contentValues.put(CONTACTS_COLUMN_GENDER, gender);
+        contentValues.put(CONTACTS_COLUMN_PASS, password);
+        db.insert(CONTACTS_TABLE_NAME, null, contentValues);
         return true;
     }
 
@@ -73,17 +75,17 @@ public class dbhelper extends SQLiteOpenHelper {
         return numRows;
     }*/
 
-    /*public boolean updateContact (Integer id, String name, String phone, String email, String street,String place) {
+    public boolean updateContact(Integer id, String name, String phone, String email, String gender, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
         contentValues.put("phone", phone);
         contentValues.put("email", email);
-        contentValues.put("street", street);
-        contentValues.put("place", place);
-        db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        contentValues.put("street", gender);
+        contentValues.put("place", password);
+        db.update("contacts", contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return true;
-    }*/
+    }
 
     public Integer deleteContact (Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -100,7 +102,7 @@ public class dbhelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select * from contacts", null );
         res.moveToFirst();
 
-        while(res.isAfterLast() == false){
+        while (!res.isAfterLast()) {
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_NAME)));
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_EMAIL)));
             res.moveToNext();
